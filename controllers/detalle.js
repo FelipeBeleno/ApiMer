@@ -7,12 +7,8 @@ const Cabezera = require("../models/saleMaster");
 
 const AddDetail = async (req, res) => {
 
+    const cabeceraId = req.params.id;
     try {
-
-
-
-        const cabeceraId = req.params.id;
-
         let date;
         date = new Date();
         date = date.getUTCFullYear() + '-' +
@@ -127,6 +123,20 @@ const AddDetail = async (req, res) => {
         })
         return
     } catch (error) {
+
+        const log = new Logs({
+            FK_CABEZERA: cabeceraId,
+            GET_DATE: date,
+            STATUS: 'I',
+            DESCRIPTION: 'Error'
+        })
+        await log.save()
+
+
+        res.json({
+            message: `el producto no tiene el stock ${producto}`
+        })
+
         res.status(400).json(error)
 
     }
